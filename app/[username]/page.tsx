@@ -92,7 +92,7 @@ export default async function PublicCatalogPage({ params }: Props) {
   const gerarLinkWhatsApp = (produto: Produto) => {
     const telefone = userData.telefone || '';
     const nomeVendedor = userData.nomeCompleto || username;
-    const linkCatalogo = `https://seu-dominio.com/${username}`;
+    const linkCatalogo = `https://link-app-ruby.vercel.app/${username}`;
 
     const mensagem = `🛍️ *Interesse em produto*
 
