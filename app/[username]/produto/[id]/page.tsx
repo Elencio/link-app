@@ -4,11 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface Params {
-  params: { username: string; id: string };
+  params: Promise<{ username: string; id: string }>;
 }
 
 export default async function ProdutoDetalhadoPage({ params }: Params) {
-  const { username, id } = params;
+  const { username, id } = await params;
 
   const userQuery = query(collection(db, 'usuarios'), where('username', '==', username));
   const userSnapshot = await getDocs(userQuery);
