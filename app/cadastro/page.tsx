@@ -3,19 +3,32 @@
 import { useEffect, useState } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
     collection,
     addDoc,
     onSnapshot,
     query,
     where,
+    Timestamp,
 } from 'firebase/firestore';
-import { signOut } from 'firebase/auth';
+import { signOut, User } from 'firebase/auth';
+
+// Interfaces para tipagem
+interface Produto {
+    id: string;
+    uid: string;
+    nome: string;
+    descricao: string;
+    preco: string;
+    imagemBase64: string;
+    criadoEm: Timestamp;
+}
 
 export default function CadastroPage() {
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
-    const [produtos, setProdutos] = useState<any[]>([]);
+    const [user, setUser] = useState<User | null>(null);
+    const [produtos, setProdutos] = useState<Produto[]>([]);
     const [nome, setNome] = useState('');
     const [descricao, setDescricao] = useState('');
     const [preco, setPreco] = useState('');
@@ -36,7 +49,10 @@ export default function CadastroPage() {
         if (!user) return;
         const q = query(collection(db, 'produtos'), where('uid', '==', user.uid));
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            setProdutos(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+            setProdutos(snapshot.docs.map((doc) => ({ 
+                id: doc.id, 
+                ...doc.data() 
+            } as Produto)));
         });
         return unsubscribe;
     }, [user]);
@@ -74,7 +90,7 @@ export default function CadastroPage() {
 
             // Salvar produto no Firestore com imagem em Base64
             await addDoc(collection(db, 'produtos'), {
-                uid: user.uid,
+                uid: user?.uid,
                 nome,
                 descricao,
                 preco,
@@ -175,11 +191,15 @@ export default function CadastroPage() {
                     {produtos.map((produto) => (
                         <div key={produto.id} className="border p-4 rounded-lg shadow-sm">
                             {produto.imagemBase64 && (
-                                <img 
-                                    src={produto.imagemBase64} 
-                                    alt={produto.nome} 
-                                    className="h-48 w-full object-cover rounded mb-3"
-                                />
+                                <div className="relative h-48 w-full mb-3">
+                                    <Image 
+                                        src={produto.imagemBase64} 
+                                        alt={produto.nome} 
+                                        fill
+                                        className="object-cover rounded"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    />
+                                </div>
                             )}
                             <h3 className="font-bold text-lg">{produto.nome}</h3>
                             <p className="text-gray-600 mb-2">{produto.descricao}</p>

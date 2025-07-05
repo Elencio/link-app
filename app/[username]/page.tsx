@@ -4,11 +4,13 @@ import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import BotaoCopiarProduto from './components/BotaoCopiarProduto';
 import BotaoCompartilhar from './components/BotaoCompartilhar';
+import Link from 'next/link';
+import Image from 'next/image';
 
 interface Props {
-  params: {
+  params: Promise<{
     username: string;
-  };
+  }>;
 }
 
 interface Produto {
@@ -27,7 +29,8 @@ interface Usuario {
 }
 
 export default async function PublicCatalogPage({ params }: Props) {
-  const username = params.username;
+  // ✅ AWAIT params in Next.js 15
+  const { username } = await params;
 
   // Buscar dados do usuário
   const userSnapshot = await getDocs(
@@ -41,12 +44,12 @@ export default async function PublicCatalogPage({ params }: Props) {
         <p className="text-gray-600">
           O usuário <strong>@{username}</strong> não existe ou não tem um catálogo público.
         </p>
-        <a 
+        <Link 
           href="/" 
           className="inline-block mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Voltar à página inicial
-        </a>
+        </Link>
       </div>
     );
   }
@@ -107,14 +110,14 @@ export default async function PublicCatalogPage({ params }: Props) {
         {/* 📞 CONTATO DIRETO */}
         {userData.telefone && (
           <div className="mb-4">
-            <a
+            <Link
               href={`https://wa.me/55${userData.telefone.replace(/\D/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
               📱 Falar com {userData.nomeCompleto || username}
-            </a>
+            </Link>
           </div>
         )}
       </div>
@@ -134,10 +137,12 @@ export default async function PublicCatalogPage({ params }: Props) {
           <div key={produto.id} className="border rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow bg-white">
             {produto.imagemBase64 && (
               <div className="relative h-48 w-full">
-                <img
+                <Image
                   src={produto.imagemBase64}
                   alt={produto.nome}
                   className="w-full h-full object-cover"
+                  width={400}
+                  height={192}
                 />
               </div>
             )}
@@ -150,14 +155,14 @@ export default async function PublicCatalogPage({ params }: Props) {
               </p>
               
               {/* 🟢 BOTÃO WHATSAPP (Link simples - sem JavaScript) */}
-              <a
+              <Link
                 href={gerarLinkWhatsApp(produto)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full text-center bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold"
               >
                 💬 Pedir no WhatsApp
-              </a>
+              </Link>
               
               {/* 📋 BOTÃO COPIAR (Client Component) */}
               <BotaoCopiarProduto 
@@ -179,12 +184,12 @@ export default async function PublicCatalogPage({ params }: Props) {
           />
           
           {/* 🏠 VOLTAR */}
-          <a 
+          <Link 
             href="/" 
             className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
           >
             🏠 Ver outros catálogos
-          </a>
+          </Link>
         </div>
         
         <p className="text-gray-500 text-sm">

@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { auth, db } from '@/lib/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, AuthError } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { doc, setDoc, getDocs, collection, query, where } from 'firebase/firestore';
+import { FirebaseError } from 'firebase/app';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function RegisterPage() {
   const [carregando, setCarregando] = useState(false);
 
   // ✅ VALIDAÇÃO: Verificar se username já existe
-  const verificarUsername = async (username: string) => {
+  const verificarUsername = async (username: string): Promise<boolean> => {
     const usernameQuery = query(
       collection(db, 'usuarios'), 
       where('username', '==', username.toLowerCase())
@@ -24,7 +25,7 @@ export default function RegisterPage() {
     return !snapshot.empty;
   };
 
-  const registrar = async () => {
+  const registrar = async (): Promise<void> => {
     if (!username.trim() || !email.trim() || !senha.trim()) {
       setErro('Preencha todos os campos');
       return;
@@ -77,25 +78,33 @@ export default function RegisterPage() {
       // Redirecionar para página de produtos
       router.push('/cadastro');
 
-    } catch (e: any) {
-      console.error('Erro no registro:', e);
+    } catch (error) {
+      console.error('Erro no registro:', error);
       
-      // Tratar diferentes tipos de erro
-      switch (e.code) {
-        case 'auth/email-already-in-use':
-          setErro('Este email já está em uso');
-          break;
-        case 'auth/invalid-email':
-          setErro('Email inválido');
-          break;
-        case 'auth/weak-password':
-          setErro('Senha muito fraca. Use pelo menos 6 caracteres');
-          break;
-        case 'auth/operation-not-allowed':
-          setErro('Registro não permitido. Contate o suporte');
-          break;
-        default:
-          setErro('Erro ao criar conta. Tente novamente');
+      // Type guard para verificar se é um FirebaseError
+      if (error instanceof FirebaseError || (error as AuthError)?.code) {
+        const firebaseError = error as AuthError;
+        
+        // Tratar diferentes tipos de erro
+        switch (firebaseError.code) {
+          case 'auth/email-already-in-use':
+            setErro('Este email já está em uso');
+            break;
+          case 'auth/invalid-email':
+            setErro('Email inválido');
+            break;
+          case 'auth/weak-password':
+            setErro('Senha muito fraca. Use pelo menos 6 caracteres');
+            break;
+          case 'auth/operation-not-allowed':
+            setErro('Registro não permitido. Contate o suporte');
+            break;
+          default:
+            setErro('Erro ao criar conta. Tente novamente');
+        }
+      } else {
+        // Para outros tipos de erro
+        setErro('Erro inesperado. Tente novamente');
       }
     } finally {
       setCarregando(false);
@@ -103,14 +112,14 @@ export default function RegisterPage() {
   };
 
   // Permitir registro com Enter
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
       registrar();
     }
   };
 
   // ✅ FORMATAÇÃO AUTOMÁTICA: Remove caracteres inválidos
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value.toLowerCase().replace(/[^a-zA-Z0-9_]/g, '');
     setUsername(value);
   };

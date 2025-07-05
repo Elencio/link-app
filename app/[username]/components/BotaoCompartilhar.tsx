@@ -65,6 +65,7 @@ export default function BotaoCompartilhar({ nomeVendedor }: Props) {
       document.execCommand('copy');
       alert('🔗 Link do catálogo copiado!');
     } catch (err) {
+        console.error('Erro:', err);
       alert('❌ Não foi possível copiar. Copie manualmente: ' + text);
     }
     

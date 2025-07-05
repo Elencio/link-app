@@ -38,6 +38,7 @@ export default function BotaoCopiarProduto({ nome, preco, descricao }: Props) {
       document.execCommand('copy');
       alert('✅ Produto copiado para área de transferência!');
     } catch (err) {
+      console.error('Erro ao copiar:', err);
       alert('❌ Não foi possível copiar. Copie manualmente: ' + text);
     }
     
