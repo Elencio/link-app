@@ -1,5 +1,3 @@
-// 📄 app/[username]/components/BotaoCopiarProduto.tsx (Client Component)
-
 'use client';
 
 interface Props {
@@ -18,11 +16,9 @@ export default function BotaoCopiarProduto({ nome, preco, descricao }: Props) {
           alert('✅ Produto copiado para área de transferência!');
         })
         .catch(() => {
-          // Fallback para navegadores antigos
           fallbackCopyText(texto);
         });
     } else {
-      // Fallback para navegadores antigos
       fallbackCopyText(texto);
     }
   };
@@ -39,7 +35,7 @@ export default function BotaoCopiarProduto({ nome, preco, descricao }: Props) {
       alert('✅ Produto copiado para área de transferência!');
     } catch (err) {
       console.error('Erro ao copiar:', err);
-      alert('❌ Não foi possível copiar. Copie manualmente: ' + text);
+      alert('Não foi possível copiar. Copie manualmente: ' + text);
     }
     
     document.body.removeChild(textArea);
@@ -50,7 +46,7 @@ export default function BotaoCopiarProduto({ nome, preco, descricao }: Props) {
       onClick={copiarProduto}
       className="w-full mt-2 text-center bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm"
     >
-      📋 Copiar informações
+      Copiar informações
     </button>
   );
 }

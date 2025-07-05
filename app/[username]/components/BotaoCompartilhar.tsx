@@ -1,5 +1,3 @@
-// 📄 app/[username]/components/BotaoCompartilhar.tsx (Client Component)
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -12,7 +10,6 @@ export default function BotaoCompartilhar({ nomeVendedor }: Props) {
   const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
-    // Só pode acessar window no lado do cliente
     setCurrentUrl(window.location.href);
   }, []);
 
@@ -23,19 +20,16 @@ export default function BotaoCompartilhar({ nomeVendedor }: Props) {
       url: currentUrl
     };
 
-    // Tentar usar Web Share API (mobile principalmente)
     if (navigator.share) {
       try {
         await navigator.share(dadosCompartilhamento);
       } catch (err) {
-        // Se cancelar o compartilhamento, não fazer nada
         if ((err as Error).name !== 'AbortError') {
           console.error('Erro ao compartilhar:', err);
           copiarLink();
         }
       }
     } else {
-      // Fallback: copiar para clipboard
       copiarLink();
     }
   };
@@ -77,7 +71,7 @@ export default function BotaoCompartilhar({ nomeVendedor }: Props) {
       onClick={compartilharCatalogo}
       className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
     >
-      📤 Compartilhar catálogo
+       Compartilhar catálogo
     </button>
   );
 }
