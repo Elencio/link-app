@@ -1,5 +1,3 @@
-// 📄 app/[username]/page.tsx (Server Component)
-
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import BotaoCopiarProduto from './components/BotaoCopiarProduto';
@@ -29,10 +27,8 @@ interface Usuario {
 }
 
 export default async function PublicCatalogPage({ params }: Props) {
-  // ✅ AWAIT params in Next.js 15
   const { username } = await params;
 
-  // Buscar dados do usuário
   const userSnapshot = await getDocs(
     query(collection(db, 'usuarios'), where('username', '==', username))
   );
