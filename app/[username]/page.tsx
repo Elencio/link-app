@@ -13,7 +13,6 @@ import {
   UserPlus,
   Home,
   Shield,
-  Star,
   Eye,
   ExternalLink,
   Sparkles,
@@ -263,7 +262,7 @@ export default async function PublicCatalogPage({ params }: Props) {
                     <p className="text-gray-600 mb-4 text-sm line-clamp-3 leading-relaxed">{produto.descricao}</p>
                   )}
 
-                  {produto.servicosPrestados && (
+                  {/* {produto.servicosPrestados && (
                     <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4">
                       <p className="text-blue-700 text-sm flex items-center">
                         <Star className="h-4 w-4 mr-2" />
@@ -271,7 +270,7 @@ export default async function PublicCatalogPage({ params }: Props) {
                         <span className="ml-1">{produto.servicosPrestados}</span>
                       </p>
                     </div>
-                  )}
+                  )} */}
 
                   <div className="flex items-center justify-between mb-6">
                     <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full">

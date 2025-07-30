@@ -280,7 +280,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-gray-700 leading-relaxed">
-                "Minhas vendas triplicaram depois que criei meu catálogo. Os clientes adoram poder ver todos os doces organizados e fazer pedidos pelo WhatsApp."
+                &quot;Minhas vendas triplicaram depois que criei meu catálogo. Os clientes adoram poder ver todos os doces organizados e fazer pedidos pelo WhatsApp.&quot;
               </p>
             </div>
 
@@ -300,7 +300,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-gray-700 leading-relaxed">
-                "Profissionalizei minha loja sem gastar nada. O catálogo ficou lindo e meus clientes sempre elogiam a organização dos produtos."
+                &quot;Profissionalizei minha loja sem gastar nada. O catálogo ficou lindo e meus clientes sempre elogiam a organização dos produtos.&quot;
               </p>
             </div>
 
@@ -320,7 +320,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-gray-700 leading-relaxed">
-                "Super fácil de usar! Em 10 minutos já tinha meu catálogo pronto. A integração com WhatsApp é perfeita para receber pedidos."
+                &quot;Super fácil de usar! Em 10 minutos já tinha meu catálogo pronto. A integração com WhatsApp é perfeita para receber pedidos.&quot;
               </p>
             </div>
           </div>

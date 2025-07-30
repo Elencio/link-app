@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation"
 import { auth, db } from "@/lib/firebase"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { collection, getDocs, query, orderBy } from "firebase/firestore"
+import { Timestamp } from "firebase/firestore";
+
+
+
 import { signOut } from "firebase/auth"
 import {
   Users,
@@ -31,7 +35,7 @@ interface Usuario {
   email: string
   username: string
   telefone?: string
-  criadoEm: any
+  criadoEm: number
   produtoCount: number
 }
 
@@ -42,17 +46,14 @@ export default function AdminSimples() {
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState("")
 
-  // Verificar se é admin
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || "")
 
-  // Redirecionar se não for admin
   useEffect(() => {
     if (!loading && !isAdmin) {
       router.push("/login")
     }
   }, [isAdmin, loading, router])
 
-  // Carregar dados
   useEffect(() => {
     if (isAdmin) {
       carregarUsuarios()
@@ -62,11 +63,8 @@ export default function AdminSimples() {
   const carregarUsuarios = async () => {
     try {
       setCarregando(true)
-
-      // Buscar usuários
       const usuariosSnapshot = await getDocs(query(collection(db, "usuarios"), orderBy("criadoEm", "desc")))
 
-      // Buscar produtos (opcional - remova se não tiver)
       const produtosPorUsuario: { [key: string]: number } = {}
       try {
         const produtosSnapshot = await getDocs(collection(db, "produtos"))
@@ -78,10 +76,9 @@ export default function AdminSimples() {
           }
         })
       } catch (produtoError) {
-        console.log("Coleção produtos não encontrada, ignorando contagem")
+        console.log("Coleção produtos não encontrada, ignorando contagem", produtoError)
       }
 
-      // Processar usuários
       const usuariosData: Usuario[] = []
       usuariosSnapshot.forEach((doc) => {
         const userData = doc.data()
@@ -109,15 +106,24 @@ export default function AdminSimples() {
     router.push("/")
   }
 
-  const formatarData = (timestamp: any) => {
-    if (!timestamp) return "Sem data"
-    try {
-      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
-      return date.toLocaleDateString("pt-BR")
-    } catch {
-      return "Data inválida"
+  const formatarData = (timestamp: Timestamp | Date | number | null | undefined) => {
+  if (!timestamp) return "Sem data";
+  try {
+    let date: Date;
+    if (timestamp instanceof Timestamp) {
+      date = timestamp.toDate();
+    } else if (timestamp instanceof Date) {
+      date = timestamp;
+    } else if (typeof timestamp === "number") {
+      date = new Date(timestamp);
+    } else {
+      return "Data inválida";
     }
+    return date.toLocaleDateString("pt-BR");
+  } catch {
+    return "Data inválida";
   }
+};
 
   if (loading || carregando) {
     return (

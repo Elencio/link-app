@@ -38,7 +38,7 @@ export default function BotaoCompartilhar({ nomeVendedor }: Props) {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(currentUrl)
         .then(() => {
-          alert('🔗 Link do catálogo copiado para área de transferência!');
+          alert('Link do catálogo copiado para área de transferência!');
         })
         .catch(() => {
           fallbackCopyText(currentUrl);
@@ -60,7 +60,7 @@ export default function BotaoCompartilhar({ nomeVendedor }: Props) {
       alert('🔗 Link do catálogo copiado!');
     } catch (err) {
         console.error('Erro:', err);
-      alert('❌ Não foi possível copiar. Copie manualmente: ' + text);
+      alert('Não foi possível copiar. Copie manualmente: ' + text);
     }
     
     document.body.removeChild(textArea);

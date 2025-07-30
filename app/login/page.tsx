@@ -15,11 +15,10 @@ export default function LoginPage() {
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState("")
 
-  // Redireciona se já estiver logado
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.push("/dashboard")
+        router.push("/cadastro")
       }
     })
     return unsubscribe

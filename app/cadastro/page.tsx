@@ -427,7 +427,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {produtos.map((produto, index) => (
+                {produtos.map((produto) => (
                   <div
                     key={produto.id}
                     className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 group"
